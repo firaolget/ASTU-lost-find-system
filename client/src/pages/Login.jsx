@@ -26,7 +26,7 @@ const Login = () => {
 
         try {
             const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-            const response = await axios.post(`http://localhost:5000${endpoint}`, {
+            const response = await axios.post(`https://astu-lost-find-system.onrender.com${endpoint}`, {
                 name: formData.name,
                 id: formData.id,
                 password: formData.password

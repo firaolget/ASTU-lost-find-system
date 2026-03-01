@@ -10,11 +10,14 @@ const AdminPanel = ({ items, adminClaims, fetchData }) => {
 
   const processClaim = async (claimId, itemId, action) => {
     try {
-      await axios.post("http://localhost:5000/api/admin/process-claim", {
-        claimId,
-        itemId,
-        action,
-      });
+      await axios.post(
+        "https://astu-lost-find-system.onrender.com/api/admin/process-claim",
+        {
+          claimId,
+          itemId,
+          action,
+        },
+      );
       alert(
         action === "approve"
           ? "Approved! Item Removed from Feed."
