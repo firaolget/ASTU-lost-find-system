@@ -1,9 +1,6 @@
-require("express").Router();
-const { pool } = require("pg");
-const multer = require("multer");
-const path = require("path");
+const pool = require("../config/db");
 
-const report = async (req, res) => {
+exports.reportItem = async (req, res) => {
   const { type, name, category, desc, location, date, userId } = req.body;
   const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
   try {
@@ -11,22 +8,23 @@ const report = async (req, res) => {
       "INSERT INTO items (type, item_name, category, description, location, item_date, posted_by, image_url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
       [type, name, category, desc, location, date, userId, imageUrl],
     );
-    res.json({ message: "Item Reported" });
+    res.json({ message: "Success" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-const getAllItems = async (req, res) => {
-  // JOIN with users so we get the reporter's name
-  const items = await pool.query(`
-        SELECT items.*, users.full_name as reporter_name 
-        FROM items 
-        LEFT JOIN users ON items.posted_by = users.id 
-        WHERE items.status != 'claimed' 
-        ORDER BY items.id DESC
-    `);
-  res.json(items.rows);
+exports.getItems = async (req, res) => {
+  try {
+    const items = await pool.query(`
+            SELECT items.*, users.full_name as reporter_name 
+            FROM items 
+            LEFT JOIN users ON items.posted_by = users.id 
+            WHERE items.status = 'active' 
+            ORDER BY items.id DESC
+        `);
+    res.json(items.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
-
-module.exports = { report, getAllItems };
