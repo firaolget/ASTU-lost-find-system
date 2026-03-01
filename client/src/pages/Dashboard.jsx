@@ -7,6 +7,7 @@ import ReportModal from "../components/Modals/ReportModal";
 import ClaimModal from "../components/Modals/ClaimModal";
 import { Search } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import API from "../api";
 
 const Dashboard = () => {
   const [view, setView] = useState("found");
@@ -26,12 +27,12 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       // Updated to match modular backend routes
-      const res = await axios.get("http://localhost:5000/api/items");
-      setItems(res.data);
+      
+      const items = await API.get('/items');
+      setItems(items.data);
       if (user.isAdmin) {
-        const claimRes = await axios.get(
-          "http://localhost:5000/api/admin/claims",
-        );
+        const claimRes = await API.get("/admin/claims");
+
         setAdminClaims(claimRes.data);
       }
     } catch (err) {

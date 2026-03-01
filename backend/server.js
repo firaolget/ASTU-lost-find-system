@@ -1,6 +1,9 @@
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+if (!globalThis.PORT) {
+  globalThis.PORT = process.env.PORT || 5000;
+}
+
+app.listen(globalThis.PORT, () => {
+  console.log(`Server running on port ${globalThis.PORT}`);
 });
 
 const express = require("express");
@@ -14,6 +17,13 @@ const itemRoutes = require("./routes/itemRoutes");
 const claimRoutes = require("./routes/claimRoutes");
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "*", // For the demo, this allows any frontend to connect
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  }),
+);
 
 // Middleware
 app.use(express.json());
